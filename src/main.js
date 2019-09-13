@@ -10,7 +10,6 @@ let UNIT_MAP_HEIGHT = canvas.height / 9;
 
 let BLACK = '#424242';
 let WHITE = '#FFFFFF';
-let GREY = '#BDBDBD';
 let PLAYER_FRAME1 = 'assets/img/player1.png';
 let PLAYER_FRAME2 = 'assets/img/player2.png';
 let PLAYER_BACK_FRAME1 = 'assets/img/player3.png';
@@ -54,17 +53,17 @@ let LEVEL_3 = [
 let LEVEL_4 = [
     [
         [0, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 2, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 8, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 9, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 11, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 8, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 9, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 11, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 12, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 2, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
     ],
     [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 4 + 1, 1]
 ];
@@ -72,33 +71,31 @@ let LEVEL_4 = [
 let LEVEL_5 = [
     [
         [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 5, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 8, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 9, UNIT_MAP_HEIGHT * 1.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 11, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 12, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
-        [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 5, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 8, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 9, UNIT_MAP_HEIGHT * 1.5, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 11, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 12, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1.5, UNIT_MAP_HEIGHT * 9],
     ],
     [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 3.5 + 1, 1]
 ];
 
-
 let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
-let CUR_LEVEL = 0;
+let CUR_LEVEL = 3;
 
 let goal = Sprite({
     x: UNIT_MAP_WIDTH * 12.5,
     y: UNIT_MAP_HEIGHT * 2,
     width: UNIT_MAP_HEIGHT,
     height: UNIT_MAP_HEIGHT / 2,
-    color: GREY,
     update: update_goal
 });
 
@@ -139,7 +136,6 @@ let player = Sprite({
     pre_y: 0,
     width: UNIT_MAP_HEIGHT,
     height: UNIT_MAP_HEIGHT,
-    color: GREY,
     dy: 0,
     ddy: 0,
     is_landed: false,
@@ -255,11 +251,37 @@ function log_pre_pos() {
     player.pre_y = player.y;
 }
 
+function playShort(moveType) {
+    switch (moveType) {
+        case "jump":
+            D = IS_BACK_SIDE ? [13, 12, 10] : [13, 12, 15];
+            break;
+        case "flip":
+            D = IS_BACK_SIDE ? [10, 15] : [15, 10];
+            break;
+        default:
+            D = [];
+    }
+    with (new AudioContext)
+        with (G = createGain())
+            for (i in D)
+                with (createOscillator())
+                    if (D[i])
+                        connect(G),
+                            G.connect(destination),
+                            start(i * .1),
+                            frequency.setValueAtTime(440 * 1.06 ** (13 - D[i]), i * .1),
+                            gain.setValueAtTime(1, i * .1),
+                            gain.setTargetAtTime(.0001, i * .1 + .08, .005),
+                            stop(i * .1 + .09)
+}
+
+
 /**
  * Game loop
  */
 let loop = GameLoop({
-    update: function () { // update the game state
+    update: function () {
         generate_map();
         goal.update();
         log_pre_pos();
@@ -278,10 +300,12 @@ let loop = GameLoop({
         if (keyPressed('up')) {
             if (player.is_landed) {
                 if (!IS_BACK_SIDE) {
+                    playShort("jump");
                     player.dy = -20;
                     player.ddy = 1;
                     player.is_landed = false;
                 } else {
+                    playShort("flip");
                     IS_BACK_SIDE = false;
                     playerImg.src = PLAYER_FRAME1;
                     player.animCount = 0;
@@ -292,10 +316,12 @@ let loop = GameLoop({
         } else if (keyPressed('down')) {
             if (player.is_landed) {
                 if (IS_BACK_SIDE) {
+                    playShort("jump");
                     player.dy = 20;
                     player.ddy = -1;
                     player.is_landed = false;
                 } else {
+                    playShort("flip");
                     IS_BACK_SIDE = true;
                     playerImg.src = PLAYER_BACK_FRAME1;
                     player.animCount = 0;
@@ -317,7 +343,7 @@ let loop = GameLoop({
         player.update();
         tile_pool.update();
     },
-    render: function () { // render the game state
+    render: function () {
         fill_canvas();
         tile_pool.render();
         goal.render();
