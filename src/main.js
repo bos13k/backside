@@ -13,6 +13,8 @@ WHITE = '#FFFFFF';
 GREY = '#BDBDBD';
 let PLAYER_FRAME1 = 'assets/img/player1.png';
 let PLAYER_FRAME2 = 'assets/img/player2.png';
+let PLAYER_BACK_FRAME1 = 'assets/img/player3.png';
+let PLAYER_BACK_FRAME2 = 'assets/img/player4.png';
 
 let IS_BACK_SIDE = false;
 
@@ -40,10 +42,10 @@ playerImg.onload = function () {
 
 function player_walk() {
     if (player.animCount === 30) {
-        playerImg.src = PLAYER_FRAME2;
+        playerImg.src = IS_BACK_SIDE ? PLAYER_BACK_FRAME2 : PLAYER_FRAME2;
     }
     if (player.animCount === 60) {
-        playerImg.src = PLAYER_FRAME1;
+        playerImg.src = IS_BACK_SIDE ? PLAYER_BACK_FRAME1 : PLAYER_FRAME1;
         player.animCount = 0;
     }
     player.animCount += 1;
@@ -240,6 +242,8 @@ let loop = GameLoop({
                     console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
 
                     IS_BACK_SIDE = false;
+                    playerImg.src = PLAYER_FRAME1;
+                    player.animCount = 0;
                     player.anchor = {x: 0, y: 0};
                     player.y -= 150;
                     // player.rotation = 0;
@@ -256,6 +260,8 @@ let loop = GameLoop({
                     console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
 
                     IS_BACK_SIDE = true;
+                    playerImg.src = PLAYER_BACK_FRAME1;
+                    player.animCount = 0;
                     player.anchor = {x: 0, y: 1};
                     player.y += 150;
                     // player.rotation = Math.PI - player.rotation;
