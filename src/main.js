@@ -52,8 +52,40 @@ let LEVEL_3 = [
     [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1, 1]
 ];
 
-let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3];
-let CUR_LEVEL = 0;
+let LEVEL_4 = [
+    [
+        [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 2.5, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 2.5, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 3.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 4.5, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 5.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 6.5, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 7.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 8.5, UNIT_MAP_HEIGHT * 1.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 9.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10.5, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 11.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 5.5, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 13.5, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 1, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 14.5, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1.5, UNIT_MAP_HEIGHT * 9],
+    ],
+    [UNIT_MAP_WIDTH * 14.75, UNIT_MAP_HEIGHT * 3.5 + 1, 1]
+];
+
+let LEVEL_5 = [
+    [
+        [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 0, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 4],
+        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9]
+    ],
+    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1, 1]
+];
+
+
+let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
+let CUR_LEVEL = 3;
 
 let goal = Sprite({
     x: UNIT_MAP_WIDTH * 12.5,
@@ -80,9 +112,11 @@ function update_goal() {
             CUR_LEVEL++;
             player.x = 100;
             player.y = 0;
+            player.is_landed = false;
             tile_pool.clear();
         } else {
-            alert('game over, you win')
+            loop.stop();
+            alert('game over, you win');
         }
     }
 }
