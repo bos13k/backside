@@ -89,7 +89,7 @@ let LEVEL_5 = [
 ];
 
 let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
-let CUR_LEVEL = 3;
+let CUR_LEVEL = 0;
 
 let goal = Sprite({
     x: UNIT_MAP_WIDTH * 12.5,
