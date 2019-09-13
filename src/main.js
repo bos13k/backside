@@ -122,11 +122,16 @@ load(
 
     function drawHomepage() {
         context.fillStyle = BLACK;
-        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        context.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height / 2);
         let title = TITLE;
         titleX = canvas.width / 2 - title.width * 5;
         titleY = canvas.height / 2 - title.height * 5;
         context.drawImage(title, titleX, titleY, title.width * 10, title.height * 10);
+        context.font = '24px Arial';
+        context.textAlign = 'center';
+        context.fillStyle = WHITE;
+        context.fillText('Use ARROW KEY to control.', canvas.width / 2, canvas.height / 2 + 120);
+        context.fillText('Press ENTER to start.', canvas.width / 2, canvas.height / 2 + 180);
     }
 
     function game_over() {
