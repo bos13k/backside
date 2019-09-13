@@ -1,15 +1,21 @@
-let {init, Sprite, Pool, initKeys, bindKeys, keyPressed, GameLoop} = kontra;
+let {init, Sprite, Pool, initKeys, bindKeys, load, setImagePath, imageAssets, getContext, keyPressed, GameLoop} = kontra;
 let {canvas} = init();
 
 canvas.width = 1200;
 canvas.height = canvas.width / 16 * 9;
 canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:1px solid gray";
 
+let context = getContext('2d');
+context.webkitImageSmoothingEnabled = false;
+context.mozImageSmoothingEnabled = false;
+context.imageSmoothingEnabled = false;
+
 let UNIT_MAP_WIDTH = canvas.width / 16;
 let UNIT_MAP_HEIGHT = canvas.height / 9;
 
-let BLACK = '#424242';
+let BLACK = '#333333';
 let WHITE = '#FFFFFF';
+let GREY = '#BDBDBD';
 let PLAYER_FRAME1 = 'assets/img/player1.png';
 let PLAYER_FRAME2 = 'assets/img/player2.png';
 let PLAYER_BACK_FRAME1 = 'assets/img/player3.png';
@@ -18,6 +24,8 @@ let PLAYER_BACK_FRAME2 = 'assets/img/player4.png';
 let KEYS = ['assets/img/key1.png', 'assets/img/key2.png'];
 
 let IS_BACK_SIDE = false;
+// Game state: homepage 0, playing 1, over 2
+var state = 0;
 
 /**
  * Levels
@@ -89,269 +97,288 @@ let LEVEL_5 = [
 ];
 
 let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
-let CUR_LEVEL = 3;
+let CUR_LEVEL = 0;
 
-let goal = Sprite({
-    x: UNIT_MAP_WIDTH * 12.5,
-    y: UNIT_MAP_HEIGHT * 2,
-    width: UNIT_MAP_HEIGHT * 0.8,
-    height: UNIT_MAP_HEIGHT / 2.5,
-    update: update_goal
-});
+setImagePath('assets/img');
+load(
+    'home.png',
+    'player1.png',
+    'player2.png',
+    'player3.png',
+    'player4.png',
+    'key1.png',
+    'key2.png'
+).then(function() {
 
+    let TITLE = imageAssets['home'];
+    let PLAYER_FRAME1 = imageAssets['player1'];
+    let PLAYER_FRAME2 = imageAssets['player2'];
+    let PLAYER_BACK_FRAME1 = imageAssets['player3'];
+    let PLAYER_BACK_FRAME2 = imageAssets['player4'];
+    let KEYS = [imageAssets['key1'], imageAssets['key2']];
 
-function update_goal() {
-    let key_image = new Image();
-    key_image.src = KEYS[LEVELS[CUR_LEVEL][1][2]];
-    key_image.onload = function () {
-        goal.image = key_image;
+    let goal = Sprite({
+        x: UNIT_MAP_WIDTH * 12.5,
+        y: UNIT_MAP_HEIGHT * 2,
+        width: UNIT_MAP_HEIGHT,
+        height: UNIT_MAP_HEIGHT * 5 / 13,
+        image: imageAssets['key1'],
+        update: update_goal
+    });
+
+    function drawHomepage() {
+        context.fillStyle = BLACK;
+        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        let title = TITLE;
+        titleX = canvas.width / 2 - title.width * 5;
+        titleY = canvas.height / 2 - title.height * 5;
+        context.drawImage(title, titleX, titleY, title.width * 10, title.height * 10);
     };
 
-    this.x = LEVELS[CUR_LEVEL][1][0];
-    this.y = LEVELS[CUR_LEVEL][1][1];
+    function update_goal() {
+        goal.image = KEYS[LEVELS[CUR_LEVEL][1][2]];;
 
-    if (this.collidesWith(player)) {
-        if (CUR_LEVEL < LEVELS.length - 1) {
-            CUR_LEVEL++;
-            player.x = 100;
-            player.y = 0;
-            player.is_landed = false;
-            tile_pool.clear();
-        } else {
-            loop.stop();
-            alert('game over, you win');
+        this.x = LEVELS[CUR_LEVEL][1][0];
+        this.y = LEVELS[CUR_LEVEL][1][1];
+
+        if (this.collidesWith(player)) {
+            if (CUR_LEVEL < LEVELS.length - 1) {
+                CUR_LEVEL++;
+                player.x = 100;
+                player.y = 0;
+                player.is_landed = false;
+                tile_pool.clear();
+            } else {
+                loop.stop();
+                alert('Game over, you win!');
+            }
         }
     }
-}
 
-function generate_map() {
-    LEVELS[CUR_LEVEL][0].forEach(function (para) {
-        get_tile(...para)
+    function generate_map() {
+        LEVELS[CUR_LEVEL][0].forEach(function (para) {
+            get_tile(...para)
+        });
+    }
+
+    let player = Sprite({
+        x: 100,
+        y: 0,
+        pre_y: 0,
+        width: UNIT_MAP_HEIGHT * 0.64,
+        height: UNIT_MAP_HEIGHT,
+        dy: 0,
+        ddy: 0,
+        is_landed: false,
+        move_right: null,
+        rotation: 0,
+        animCount: 0,
+        image: PLAYER_FRAME1,
+        walk: player_walk
     });
-}
 
-let player = Sprite({
-    x: 100,
-    y: 0,
-    pre_y: 0,
-    width: UNIT_MAP_HEIGHT * 0.7,
-    height: UNIT_MAP_HEIGHT,
-    dy: 0,
-    ddy: 0,
-    is_landed: false,
-    move_right: null,
-    rotation: 0,
-    animCount: 0,
-    walk: player_walk
-});
-
-let playerImg = new Image();
-playerImg.src = PLAYER_FRAME1;
-playerImg.onload = function () {
-    player.image = playerImg;
-};
-
-function player_walk() {
-    if (player.animCount === 30) {
-        playerImg.src = IS_BACK_SIDE ? PLAYER_BACK_FRAME2 : PLAYER_FRAME2;
-    }
-    if (player.animCount === 60) {
-        playerImg.src = IS_BACK_SIDE ? PLAYER_BACK_FRAME1 : PLAYER_FRAME1;
-        player.animCount = 0;
-    }
-    player.animCount += 1;
-}
-
-let tile_pool = Pool({
-    create: Sprite,
-    maxSize: 16,
-});
-
-function get_tile(x, y, width, height) {
-    tile_pool.get({
-        x: x,
-        y: y,
-        width: width,
-        height: height,
-        anchor: {x: 0, y: 0},  // top left corner
-        color: BLACK,
-        update: update_status,
-    })
-}
-
-function update_status() {
-    if (!IS_BACK_SIDE) {
-        this.anchor = {x: 0, y: 0};
-        this.color = BLACK;
-    } else {
-        this.anchor = {x: 0, y: 1};
-        this.color = WHITE;
+    function player_walk() {
+        if (player.animCount === 30) {
+            player.image = IS_BACK_SIDE ? PLAYER_BACK_FRAME2 : PLAYER_FRAME2;
+        }
+        if (player.animCount === 60) {
+            player.image = IS_BACK_SIDE ? PLAYER_BACK_FRAME1 : PLAYER_FRAME1;
+            player.animCount = 0;
+        }
+        player.animCount += 1;
     }
 
-    if (player.collidesWith(this)) {
+    let tile_pool = Pool({
+        create: Sprite,
+        maxSize: 16,
+    });
+
+    function get_tile(x, y, width, height) {
+        tile_pool.get({
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            anchor: {x: 0, y: 0},  // top left corner
+            color: BLACK,
+            update: update_status,
+        })
+    }
+
+    function update_status() {
         if (!IS_BACK_SIDE) {
-            if (player.y + player.height >= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
-                if (player.pre_y + player.height <= this.y + 1) {
-                    player.y = this.y - player.height + 1;
-                    player.dy = 0;
-                    player.ddy = 0;
-                    player.is_landed = true;
-                } else {
-                    if (player.move_right) {
-                        player.x = this.x - player.width;
+            this.anchor = {x: 0, y: 0};
+            this.color = BLACK;
+        } else {
+            this.anchor = {x: 0, y: 1};
+            this.color = WHITE;
+        }
+
+        if (player.collidesWith(this)) {
+            if (!IS_BACK_SIDE) {
+                if (player.y + player.height >= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
+                    if (player.pre_y + player.height <= this.y + 1) {
+                        player.y = this.y - player.height + 1;
+                        player.dy = 0;
+                        player.ddy = 0;
+                        player.is_landed = true;
                     } else {
-                        player.x = this.x + this.width;
+                        if (player.move_right) {
+                            player.x = this.x - player.width;
+                        } else {
+                            player.x = this.x + this.width;
+                        }
+                    }
+                }
+            } else {
+                if (player.y - player.height <= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
+                    if (player.pre_y - player.height >= this.y) {
+                        player.y = this.y + player.height;
+                        player.dy = 0;
+                        player.ddy = 0;
+                        player.is_landed = true;
+                    } else {
+                        if (player.move_right) {
+                            player.x = this.x - player.width;
+                        } else {
+                            player.x = this.x + this.width;
+                        }
                     }
                 }
             }
         } else {
-            if (player.y - player.height <= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
-                if (player.pre_y - player.height >= this.y) {
-                    player.y = this.y + player.height;
-                    player.dy = 0;
-                    player.ddy = 0;
-                    player.is_landed = true;
-                } else {
-                    if (player.move_right) {
-                        player.x = this.x - player.width;
-                    } else {
-                        player.x = this.x + this.width;
-                    }
-                }
-            }
+            !IS_BACK_SIDE ? player.ddy = 1 : player.ddy = -1;
         }
-    } else {
-        !IS_BACK_SIDE ? player.ddy = 1 : player.ddy = -1;
     }
-}
 
-function fill_canvas() {
-    let canvas = document.getElementById("canvas");
-    let context = canvas.getContext('2d');
-    context.webkitImageSmoothingEnabled = false;
-    context.mozImageSmoothingEnabled = false;
-    context.imageSmoothingEnabled = false;
+    function fill_canvas() {
 
-    if (!IS_BACK_SIDE) {
-        context.fillStyle = WHITE;
-    } else {
-        context.fillStyle = BLACK;
+        if (!IS_BACK_SIDE) {
+            context.fillStyle = WHITE;
+        } else {
+            context.fillStyle = BLACK;
+        }
+        context.fillRect(0, 0, canvas.width, canvas.height);
     }
-    context.fillRect(0, 0, canvas.width, canvas.height);
-}
 
 /**
  * Game control
  */
 initKeys();
 
-bindKeys('up', function () {
-    if (player.is_landed) {
-        if (!IS_BACK_SIDE) {
-            playShort("jump");
-            player.dy = -20;
-            player.ddy = 1;
-            player.is_landed = false;
-        } else {
-            playShort("flip");
-            IS_BACK_SIDE = false;
-            playerImg.src = PLAYER_FRAME1;
-            player.animCount = 0;
-            player.anchor = {x: 0, y: 0};
-            player.y -= 150;
-        }
+    function log_pre_pos() {
+        player.pre_x = player.x;
+        player.pre_y = player.y;
     }
+
+    function playShort(moveType) {
+        switch (moveType) {
+            case "jump":
+                D = IS_BACK_SIDE ? [13, 12, 10] : [13, 12, 15];
+                break;
+            case "flip":
+                D = IS_BACK_SIDE ? [10, 15] : [15, 10];
+                break;
+            default:
+                D = [];
+        }
+        with (new AudioContext)
+            with (G = createGain())
+                for (i in D)
+                    with (createOscillator())
+                        if (D[i])
+                            connect(G),
+                                G.connect(destination),
+                                start(i * .1),
+                                frequency.setValueAtTime(440 * 1.06 ** (13 - D[i]), i * .1),
+                                gain.setValueAtTime(1, i * .1),
+                                gain.setTargetAtTime(.0001, i * .1 + .08, .005),
+                                stop(i * .1 + .09)
+    }
+
+    /**
+     * Game loop
+     */
+    let loop = GameLoop({
+        update: function () {
+            if (state == 0) {
+                if (keyPressed('enter')) {
+                    state += 1;
+                }
+            } else if (state == 1) {
+                generate_map();
+                goal.update();
+                log_pre_pos();
+
+                if (!IS_BACK_SIDE && player.y + player.height >= canvas.height) {
+                    player.is_landed = false;
+                    player.x = 100;
+                    player.y = 0;
+                }
+                if (IS_BACK_SIDE && player.y - player.height < 0) {
+                    player.is_landed = false;
+                    player.x = 100;
+                    player.y = UNIT_MAP_HEIGHT * 9;
+                }
+
+                if (keyPressed('up')) {
+                    if (player.is_landed) {
+                        playShort("jump");
+                        if (IS_BACK_SIDE) {
+                            IS_BACK_SIDE = false;
+                            player.image = PLAYER_FRAME1;
+                            player.animCount = 0;
+                            player.anchor = {x: 0, y: 0};
+                            player.y -= 150;
+                        }
+                        player.dy = -20;
+                        player.ddy = 1;
+                        player.is_landed = false;
+                    }
+                } else if (keyPressed('down')) {
+                    if (player.is_landed) {
+                        playShort("flip");
+                        if (!IS_BACK_SIDE) {
+                            IS_BACK_SIDE = true;
+                            player.image = PLAYER_BACK_FRAME1;
+                            player.animCount = 0;
+                            player.anchor = {x: 0, y: 1};
+                            player.y += 150;
+                        }
+                        player.dy = 20;
+                        player.ddy = -1;
+                        player.is_landed = false;
+                    }
+                }
+
+                if (keyPressed('right')) {
+                    player.x += 5;
+                    player.move_right = true;
+                } else if (keyPressed('left')) {
+                    player.x -= 5;
+                    player.move_right = false;
+                }
+
+                player.walk();
+                player.update();
+                tile_pool.update();
+            }
+        },
+        render: function () {
+            if (state == 0) {
+                drawHomepage();
+            } else if (state == 1) {
+                fill_canvas();
+                tile_pool.render();
+                goal.render();
+                player.render();
+            }
+        }
+    });
+    /**
+     * Start the game
+     */
+    loop.start();
+}).catch (function(err) {
+    console.log(err);
 });
-
-bindKeys('down', function () {
-    if (player.is_landed) {
-        if (IS_BACK_SIDE) {
-            playShort("jump");
-            player.dy = 20;
-            player.ddy = -1;
-            player.is_landed = false;
-        } else {
-            playShort("flip");
-            IS_BACK_SIDE = true;
-            playerImg.src = PLAYER_BACK_FRAME1;
-            player.animCount = 0;
-            player.anchor = {x: 0, y: 1};
-            player.y += 150;
-        }
-    }
-});
-
-function log_pre_pos() {
-    player.pre_x = player.x;
-    player.pre_y = player.y;
-}
-
-function playShort(moveType) {
-    switch (moveType) {
-        case "jump":
-            D = IS_BACK_SIDE ? [13, 12, 10] : [13, 12, 15];
-            break;
-        case "flip":
-            D = IS_BACK_SIDE ? [10, 15] : [15, 10];
-            break;
-        default:
-            D = [];
-    }
-    with (new AudioContext)
-        with (G = createGain())
-            for (i in D)
-                with (createOscillator())
-                    if (D[i])
-                        connect(G),
-                            G.connect(destination),
-                            start(i * .1),
-                            frequency.setValueAtTime(440 * 1.06 ** (13 - D[i]), i * .1),
-                            gain.setValueAtTime(1, i * .1),
-                            gain.setTargetAtTime(.0001, i * .1 + .08, .005),
-                            stop(i * .1 + .09)
-}
-
-/**
- * Game loop
- */
-let loop = GameLoop({
-    update: function () {
-        generate_map();
-        goal.update();
-        log_pre_pos();
-
-        if (!IS_BACK_SIDE && player.y + player.height >= canvas.height) {
-            player.is_landed = false;
-            player.x = 100;
-            player.y = 0;
-        }
-        if (IS_BACK_SIDE && player.y - player.height < 0) {
-            player.is_landed = false;
-            player.x = 100;
-            player.y = UNIT_MAP_HEIGHT * 9;
-        }
-
-        if (keyPressed('right')) {
-            player.x += 5;
-            player.move_right = true;
-        } else if (keyPressed('left')) {
-            player.x -= 5;
-            player.move_right = false;
-        }
-
-        player.walk();
-        player.update();
-        tile_pool.update();
-    },
-    render: function () {
-        fill_canvas();
-        tile_pool.render();
-        goal.render();
-        player.render();
-    }
-});
-
-/**
- * Start the game
- */
-loop.start();
