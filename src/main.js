@@ -5,12 +5,12 @@ canvas.width = 1200;
 canvas.height = canvas.width / 16 * 9;
 canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:1px solid gray";
 
-UNIT_MAP_WIDTH = canvas.width / 16;
-UNIT_MAP_HEIGHT = canvas.height / 9;
+let UNIT_MAP_WIDTH = canvas.width / 16;
+let UNIT_MAP_HEIGHT = canvas.height / 9;
 
-BLACK = '#424242';
-WHITE = '#FFFFFF';
-GREY = '#BDBDBD';
+let BLACK = '#424242';
+let WHITE = '#FFFFFF';
+let GREY = '#BDBDBD';
 let PLAYER_FRAME1 = 'assets/img/player1.png';
 let PLAYER_FRAME2 = 'assets/img/player2.png';
 let PLAYER_BACK_FRAME1 = 'assets/img/player3.png';
@@ -18,12 +18,78 @@ let PLAYER_BACK_FRAME2 = 'assets/img/player4.png';
 
 let IS_BACK_SIDE = false;
 
+/**
+ * Levels
+ */
+let LEVEL_1 = [
+    [
+        [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
+    ],
+    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2]
+];
+
+let LEVEL_2 = [
+    [
+        [0, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
+    ],
+    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2]
+
+];
+
+let LEVEL_3 = [
+    [
+        [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
+        [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9]
+    ],
+    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1]
+];
+
+let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3];
+let CUR_LEVEL = 0;
+
+let goal = Sprite({
+    x: UNIT_MAP_WIDTH * 12.5,
+    y: UNIT_MAP_HEIGHT * 2,
+    width: UNIT_MAP_HEIGHT,
+    height: UNIT_MAP_HEIGHT,
+    color: GREY,
+    update: update_goal
+});
+
+function update_goal() {
+    this.x = LEVELS[CUR_LEVEL][1][0];
+    this.y = LEVELS[CUR_LEVEL][1][1];
+
+    if (this.collidesWith(player)) {
+        if (CUR_LEVEL < LEVELS.length - 1) {
+            CUR_LEVEL++;
+            player.x = 100;
+            player.y = 0;
+            tile_pool.clear();
+        } else {
+            alert('game over, you win')
+        }
+    }
+}
+
+function generate_map() {
+    LEVELS[CUR_LEVEL][0].forEach(function (para) {
+        get_tile(...para)
+    });
+}
+
 let player = Sprite({
     x: 100,
     y: 0,
     pre_y: 0,
-    width: UNIT_MAP_HEIGHT * 1,
-    height: UNIT_MAP_HEIGHT * 1,
+    width: UNIT_MAP_HEIGHT,
+    height: UNIT_MAP_HEIGHT,
     color: GREY,
     dy: 0,
     ddy: 0,
@@ -80,7 +146,6 @@ function update_status() {
     if (player.collidesWith(this)) {
         if (!IS_BACK_SIDE) {
             if (player.y + player.height >= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
-                // console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
                 if (player.pre_y + player.height <= this.y + 1) {
                     player.y = this.y - player.height + 1;
                     player.dy = 0;
@@ -96,8 +161,6 @@ function update_status() {
             }
         } else {
             if (player.y - player.height <= this.y && player.x + player.width >= this.x && player.x <= this.x + this.width) {
-                // console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
-
                 if (player.pre_y - player.height >= this.y) {
                     player.y = this.y + player.height;
                     player.dy = 0;
@@ -130,42 +193,6 @@ function fill_canvas() {
         context.fillStyle = BLACK;
     }
     context.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-/**
- * Levels
- */
-let level_1 = [
-    [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
-];
-
-let level_2 = [
-    [0, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
-];
-
-let level_3 = [
-    [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 2, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 7, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
-    [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9]
-];
-
-function generate_map() {
-    // level_1.forEach(function (para) {
-    //     get_tile(...para)
-    // });
-
-    // level_2.forEach(function (para) {
-    //     get_tile(...para)
-    // });
-
-    level_3.forEach(function (para) {
-        get_tile(...para)
-    });
 }
 
 
@@ -220,6 +247,7 @@ function log_pre_pos() {
 let loop = GameLoop({
     update: function () { // update the game state
         generate_map();
+        goal.update();
         log_pre_pos();
 
         if (!IS_BACK_SIDE && player.y + player.height >= canvas.height) {
@@ -246,7 +274,6 @@ let loop = GameLoop({
                     player.animCount = 0;
                     player.anchor = {x: 0, y: 0};
                     player.y -= 150;
-                    // player.rotation = 0;
                 }
             }
 
@@ -264,7 +291,6 @@ let loop = GameLoop({
                     player.animCount = 0;
                     player.anchor = {x: 0, y: 1};
                     player.y += 150;
-                    // player.rotation = Math.PI - player.rotation;
                 }
             }
         }
@@ -286,6 +312,7 @@ let loop = GameLoop({
         fill_canvas();
 
         tile_pool.render();
+        goal.render();
         player.render();
     }
 });
