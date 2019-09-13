@@ -136,6 +136,7 @@ load(
 
     function game_over() {
         context.font = '100px Arial';
+        context.textAlign = 'left';
         context.fillStyle = BLACK;
         context.fillText('Game over, you win!', 150, 350);
     }
