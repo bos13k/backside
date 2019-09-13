@@ -47,7 +47,7 @@ let LEVEL_3 = [
         [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9]
     ],
-    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1, 1]
+    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 5, 1]
 ];
 
 let LEVEL_4 = [
@@ -65,7 +65,7 @@ let LEVEL_4 = [
         [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
     ],
-    [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 4 + 1, 1]
+    [UNIT_MAP_WIDTH * 15.1, UNIT_MAP_HEIGHT * 4 + 5, 1]
 ];
 
 let LEVEL_5 = [
@@ -85,17 +85,17 @@ let LEVEL_5 = [
         [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 3.5, UNIT_MAP_WIDTH * 1.5, UNIT_MAP_HEIGHT * 9],
     ],
-    [UNIT_MAP_WIDTH * 15, UNIT_MAP_HEIGHT * 3.5 + 1, 1]
+    [UNIT_MAP_WIDTH * 15.1, UNIT_MAP_HEIGHT * 3.5 + 5, 1]
 ];
 
 let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
-let CUR_LEVEL = 0;
+let CUR_LEVEL = 3;
 
 let goal = Sprite({
     x: UNIT_MAP_WIDTH * 12.5,
     y: UNIT_MAP_HEIGHT * 2,
-    width: UNIT_MAP_HEIGHT,
-    height: UNIT_MAP_HEIGHT / 2,
+    width: UNIT_MAP_HEIGHT * 0.8,
+    height: UNIT_MAP_HEIGHT / 2.5,
     update: update_goal
 });
 
@@ -134,7 +134,7 @@ let player = Sprite({
     x: 100,
     y: 0,
     pre_y: 0,
-    width: UNIT_MAP_HEIGHT,
+    width: UNIT_MAP_HEIGHT * 0.7,
     height: UNIT_MAP_HEIGHT,
     dy: 0,
     ddy: 0,
