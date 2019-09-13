@@ -15,17 +15,11 @@ let UNIT_MAP_HEIGHT = canvas.height / 9;
 
 let BLACK = '#333333';
 let WHITE = '#FFFFFF';
-let GREY = '#BDBDBD';
-let PLAYER_FRAME1 = 'assets/img/player1.png';
-let PLAYER_FRAME2 = 'assets/img/player2.png';
-let PLAYER_BACK_FRAME1 = 'assets/img/player3.png';
-let PLAYER_BACK_FRAME2 = 'assets/img/player4.png';
-
-let KEYS = ['assets/img/key1.png', 'assets/img/key2.png'];
 
 let IS_BACK_SIDE = false;
+
 // Game state: homepage 0, playing 1, over 2
-var state = 0;
+let state = 0;
 
 /**
  * Levels
@@ -108,7 +102,7 @@ load(
     'player4.png',
     'key1.png',
     'key2.png'
-).then(function() {
+).then(function () {
 
     let TITLE = imageAssets['home'];
     let PLAYER_FRAME1 = imageAssets['player1'];
@@ -120,8 +114,8 @@ load(
     let goal = Sprite({
         x: UNIT_MAP_WIDTH * 12.5,
         y: UNIT_MAP_HEIGHT * 2,
-        width: UNIT_MAP_HEIGHT,
-        height: UNIT_MAP_HEIGHT * 5 / 13,
+        width: UNIT_MAP_HEIGHT * 0.8,
+        height: UNIT_MAP_HEIGHT / 2.5,
         image: imageAssets['key1'],
         update: update_goal
     });
@@ -133,10 +127,16 @@ load(
         titleX = canvas.width / 2 - title.width * 5;
         titleY = canvas.height / 2 - title.height * 5;
         context.drawImage(title, titleX, titleY, title.width * 10, title.height * 10);
-    };
+    }
+
+    function game_over() {
+        context.font = '100px Arial';
+        context.fillStyle = BLACK;
+        context.fillText('Game over, you win!', 150, 350);
+    }
 
     function update_goal() {
-        goal.image = KEYS[LEVELS[CUR_LEVEL][1][2]];;
+        goal.image = KEYS[LEVELS[CUR_LEVEL][1][2]];
 
         this.x = LEVELS[CUR_LEVEL][1][0];
         this.y = LEVELS[CUR_LEVEL][1][1];
@@ -149,8 +149,7 @@ load(
                 player.is_landed = false;
                 tile_pool.clear();
             } else {
-                loop.stop();
-                alert('Game over, you win!');
+                state = 2;
             }
         }
     }
@@ -261,10 +260,10 @@ load(
         context.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-/**
- * Game control
- */
-initKeys();
+    /**
+     * Game control
+     */
+    initKeys();
 
     function log_pre_pos() {
         player.pre_x = player.x;
@@ -301,11 +300,11 @@ initKeys();
      */
     let loop = GameLoop({
         update: function () {
-            if (state == 0) {
+            if (state === 0) {
                 if (keyPressed('enter')) {
                     state += 1;
                 }
-            } else if (state == 1) {
+            } else if (state === 1) {
                 generate_map();
                 goal.update();
                 log_pre_pos();
@@ -365,13 +364,16 @@ initKeys();
             }
         },
         render: function () {
-            if (state == 0) {
+            if (state === 0) {
                 drawHomepage();
-            } else if (state == 1) {
+            } else if (state === 1) {
                 fill_canvas();
                 tile_pool.render();
                 goal.render();
                 player.render();
+            }
+            if (state === 2) {
+                game_over();
             }
         }
     });
@@ -379,6 +381,6 @@ initKeys();
      * Start the game
      */
     loop.start();
-}).catch (function(err) {
+}).catch(function (err) {
     console.log(err);
 });
