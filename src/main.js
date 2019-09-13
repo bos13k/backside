@@ -14,6 +14,8 @@ let GREY = '#BDBDBD';
 let PLAYER_FRAME1 = 'assets/img/player1.png';
 let PLAYER_FRAME2 = 'assets/img/player2.png';
 
+let KEYS = ['assets/img/key1.png', 'assets/img/key2.png'];
+
 let IS_BACK_SIDE = false;
 
 /**
@@ -24,7 +26,7 @@ let LEVEL_1 = [
         [0, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
     ],
-    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2]
+    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2.5, 0]
 ];
 
 let LEVEL_2 = [
@@ -33,7 +35,7 @@ let LEVEL_2 = [
         [UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 6, UNIT_MAP_WIDTH * 4, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 3, UNIT_MAP_WIDTH * 6, UNIT_MAP_HEIGHT * 9]
     ],
-    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2]
+    [UNIT_MAP_WIDTH * 12.5, UNIT_MAP_HEIGHT * 2.5, 0]
 
 ];
 
@@ -45,7 +47,7 @@ let LEVEL_3 = [
         [UNIT_MAP_WIDTH * 10, UNIT_MAP_HEIGHT * 9, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9],
         [UNIT_MAP_WIDTH * 13, UNIT_MAP_HEIGHT * 4, UNIT_MAP_WIDTH * 3, UNIT_MAP_HEIGHT * 9]
     ],
-    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1]
+    [UNIT_MAP_WIDTH * 14, UNIT_MAP_HEIGHT * 4 + 1, 1]
 ];
 
 let LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3];
@@ -55,12 +57,19 @@ let goal = Sprite({
     x: UNIT_MAP_WIDTH * 12.5,
     y: UNIT_MAP_HEIGHT * 2,
     width: UNIT_MAP_HEIGHT,
-    height: UNIT_MAP_HEIGHT,
+    height: UNIT_MAP_HEIGHT / 2,
     color: GREY,
     update: update_goal
 });
 
+
 function update_goal() {
+    let key_image = new Image();
+    key_image.src = KEYS[LEVELS[CUR_LEVEL][1][2]];
+    key_image.onload = function () {
+        goal.image = key_image;
+    };
+
     this.x = LEVELS[CUR_LEVEL][1][0];
     this.y = LEVELS[CUR_LEVEL][1][1];
 
@@ -199,41 +208,6 @@ function fill_canvas() {
  */
 initKeys();
 
-// bindKeys('up', function () {
-//     // if (player.is_landed) {
-//     if (!IS_BACK_SIDE) {
-//         // player.dy = -20;
-//         player.dy = -15;
-//         player.ddy = 1;
-//         player.is_landed = false;
-//     } else {
-//         IS_BACK_SIDE = false;
-//         player.anchor = {x: 0, y: 0};
-//         player.y -= 5;
-//         player.pre_y = 0;
-//         console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
-//
-//         // log_pre_pos();
-//     }
-//     // }
-// });
-//
-// bindKeys('down', function () {
-//     if (IS_BACK_SIDE) {
-//         player.dy = 15;
-//         player.ddy = -1;
-//         player.is_landed = false;
-//     } else {
-//         IS_BACK_SIDE = true;
-//         player.anchor = {x: 0, y: 1};
-//         player.y += 5;
-//         player.pre_y = UNIT_MAP_HEIGHT * 9;
-//         console.log("player.pre_y + player.height: " + (player.pre_y + player.height) + ' player.y + player.height: ' + (player.y + player.height) + ' this.y: ' + this.y);
-//
-//         // log_pre_pos();
-//     }
-// });
-
 function log_pre_pos() {
     player.pre_x = player.x;
     player.pre_y = player.y;
@@ -257,7 +231,6 @@ let loop = GameLoop({
             player.y = UNIT_MAP_HEIGHT * 9;
         }
 
-
         if (keyPressed('up')) {
             if (player.is_landed) {
                 if (!IS_BACK_SIDE) {
@@ -272,7 +245,6 @@ let loop = GameLoop({
                     player.y -= 150;
                 }
             }
-
         } else if (keyPressed('down')) {
             if (player.is_landed) {
                 if (IS_BACK_SIDE) {
@@ -288,7 +260,6 @@ let loop = GameLoop({
                 }
             }
         }
-
 
         if (keyPressed('right')) {
             player.x += 5;
