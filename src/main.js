@@ -240,11 +240,46 @@ function fill_canvas() {
     context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-
 /**
  * Game control
  */
 initKeys();
+
+bindKeys('up', function () {
+    if (player.is_landed) {
+        if (!IS_BACK_SIDE) {
+            playShort("jump");
+            player.dy = -20;
+            player.ddy = 1;
+            player.is_landed = false;
+        } else {
+            playShort("flip");
+            IS_BACK_SIDE = false;
+            playerImg.src = PLAYER_FRAME1;
+            player.animCount = 0;
+            player.anchor = {x: 0, y: 0};
+            player.y -= 150;
+        }
+    }
+});
+
+bindKeys('down', function () {
+    if (player.is_landed) {
+        if (IS_BACK_SIDE) {
+            playShort("jump");
+            player.dy = 20;
+            player.ddy = -1;
+            player.is_landed = false;
+        } else {
+            playShort("flip");
+            IS_BACK_SIDE = true;
+            playerImg.src = PLAYER_BACK_FRAME1;
+            player.animCount = 0;
+            player.anchor = {x: 0, y: 1};
+            player.y += 150;
+        }
+    }
+});
 
 function log_pre_pos() {
     player.pre_x = player.x;
@@ -276,7 +311,6 @@ function playShort(moveType) {
                             stop(i * .1 + .09)
 }
 
-
 /**
  * Game loop
  */
@@ -295,40 +329,6 @@ let loop = GameLoop({
             player.is_landed = false;
             player.x = 100;
             player.y = UNIT_MAP_HEIGHT * 9;
-        }
-
-        if (keyPressed('up')) {
-            if (player.is_landed) {
-                if (!IS_BACK_SIDE) {
-                    playShort("jump");
-                    player.dy = -20;
-                    player.ddy = 1;
-                    player.is_landed = false;
-                } else {
-                    playShort("flip");
-                    IS_BACK_SIDE = false;
-                    playerImg.src = PLAYER_FRAME1;
-                    player.animCount = 0;
-                    player.anchor = {x: 0, y: 0};
-                    player.y -= 150;
-                }
-            }
-        } else if (keyPressed('down')) {
-            if (player.is_landed) {
-                if (IS_BACK_SIDE) {
-                    playShort("jump");
-                    player.dy = 20;
-                    player.ddy = -1;
-                    player.is_landed = false;
-                } else {
-                    playShort("flip");
-                    IS_BACK_SIDE = true;
-                    playerImg.src = PLAYER_BACK_FRAME1;
-                    player.animCount = 0;
-                    player.anchor = {x: 0, y: 1};
-                    player.y += 150;
-                }
-            }
         }
 
         if (keyPressed('right')) {
