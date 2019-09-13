@@ -253,7 +253,7 @@ load(
             }
         } else {
             !IS_BACK_SIDE ? player.ddy = 1 : player.ddy = -1;
-            if (Math.abs(player.dy > 0)) {
+            if (Math.abs(player.dy) > 0) {
                 player.is_landed = false;
             }
         }
